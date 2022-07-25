@@ -18,7 +18,7 @@ public class Discipline {
 
 	@Id
 	@GeneratedValue
-	Integer id;
+	Long id;
 	String avertissement;
 	LocalDate date;
 	

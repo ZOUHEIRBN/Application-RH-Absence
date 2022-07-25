@@ -1,0 +1,52 @@
+//Blacklist
+@Override
+public Blacklist addBlacklist(Blacklist D, long idc) {
+ 		
+	Collaborator c = crepo.findById(idc).get();
+	D.setCollaborateur(c);
+	D=blackrepo.save(D);
+	return D;
+}
+
+public List<Blacklist> findDepartCollaborateur(long id){
+	Collaborator e = crepo.findById(id).get();
+	return blackrepo.findByCollaborateur(e);
+}
+
+@Override
+public Blacklist updateBlacklist(Blacklist d, Long id) {
+	
+	Blacklist e =blackrepo.findById(id).get();
+	   e.setId(id);
+	   e.setDatededepart(d.getDatededepart());
+	   e.setDatefindepaie(d.getDatefindepaie());	
+	  e.setDernierjourtravaille(d.getDernierjourtravaille());
+	  e.setMotif(d.getMotif());
+	 return blackrepo.save(e);
+}
+
+@Override
+public void deleteBlacklist(long id) {
+	
+	blackrepo.deleteById(id);
+	
+}
+
+
+@Override
+public Blacklist findBlacklist(Long id) {
+	Optional<Blacklist> o = blackrepo.findById(id);
+	if(o.isPresent())
+	return o.get();
+	else
+		return null;
+}
+@Override
+public Page<Blacklist> allBlacklist(int page, int size) {
+	Pageable pageable=PageRequest.of(page, size);
+	return blackrepo.findAll(pageable);
+}
+@Override
+public List<Blacklist> getAllBlacklist() {
+	return blackrepo.findAll();
+}

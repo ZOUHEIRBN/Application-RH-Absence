@@ -32,11 +32,12 @@ public interface IService {
 	public void deleteDeparts(long id);
 	public List<Departs> findDepartCollaborateur(long uid);
 
-	// public Blacklist addBlacklist(Blacklist a, long idc);
-	// public Blacklist findBlacklist(long id);
-	// public Page<Blacklist> allBlacklist(int page, int size);
-	// public Blacklist updateBlacklists(Blacklist abs,Long id );
-	// public List<Blacklist> getAllBlacklist();
-	// public void deleteBlacklist(long id);
+	public Blacklist addBlacklist(Blacklist a, long idc);
+	public Blacklist findBlacklist(Long id);
+	public Page<Blacklist> allBlacklist(int page, int size);
+	public Blacklist updateBlacklist(Blacklist abs,long id );
+	public List<Blacklist> getAllBlacklist();
+	public void deleteBlacklist(long id);
+	public List<Blacklist> findBlacklistCollaborateur(long uid);
 
 }

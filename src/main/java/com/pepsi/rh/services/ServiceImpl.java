@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 
 import com.pepsi.rh.entities.Absence;
+import com.pepsi.rh.entities.Blacklist;
 import com.pepsi.rh.entities.Collaborator;
 import com.pepsi.rh.entities.Departs;
 import com.pepsi.rh.repo.IAbsence;
+import com.pepsi.rh.repo.IBlacklist;
 import com.pepsi.rh.repo.ICollaborateur;
 import com.pepsi.rh.repo.IDepart;
 
@@ -29,6 +31,8 @@ public class ServiceImpl implements IService{
 	IAbsence arepo;
 	@Autowired
 	IDepart deprepo;
+	@Autowired
+	IBlacklist blackrepo;
 
 	public Absence addAbsence(Absence a, long idc) {
 		Collaborator c = crepo.findById(idc).get();
@@ -175,6 +179,57 @@ public List<Departs> getAllDeparts() {
 	return deprepo.findAll();
 }
 
+//Blacklist
+@Override
+public Blacklist addBlacklist(Blacklist D, long idc) {
+ 		
+	Collaborator c = crepo.findById(idc).get();
+	D.setCollaborateur(c);
+	D=blackrepo.save(D);
+	return D;
+}
+@Override
+public List<Blacklist> findBlacklistCollaborateur(long id){
+	String cin = crepo.findById(id).get().getCin();
+	return blackrepo.findByCollaborateurCin(cin);
+}
 
+@Override
+public Blacklist updateBlacklist(Blacklist d, long id) {
+	
+	Blacklist e =blackrepo.findById(id).get();
+	//    e.setId(id);
+	//    e.setDatededepart(d.getDatededepart());
+	//    e.setDatefindepaie(d.getDatefindepaie());	
+	//   e.setDernierjourtravaille(d.getDernierjourtravaille());
+	//   e.setMotif(d.getMotif());
+	 return blackrepo.save(e);
+}
+
+@Override
+public void deleteBlacklist(long id) {
+	
+	blackrepo.deleteById(id);
+	
+}
+
+
+@Override
+public Blacklist findBlacklist(Long id) {
+	Optional<Blacklist> o = blackrepo.findById(id);
+	if(o.isPresent())
+	return o.get();
+	else
+		return null;
+}
+@Override
+public Page<Blacklist> allBlacklist(int page, int size) {
+	Pageable pageable=PageRequest.of(page, size);
+	return blackrepo.findAll(pageable);
+}
+@Override
+public List<Blacklist> getAllBlacklist() {
+	return blackrepo.findAll();
+}
 
 }
