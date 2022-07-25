@@ -1,8 +1,10 @@
 package com.pepsi.rh.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.pepsi.rh.entities.Absences;
+import com.pepsi.rh.entities.Absence;
 
-public interface IAbsence extends JpaRepository<Absences, Long>{
+@CrossOrigin
+public interface IAbsence extends JpaRepository<Absence, Long>{
 }
