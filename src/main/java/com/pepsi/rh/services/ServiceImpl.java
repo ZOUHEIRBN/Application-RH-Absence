@@ -14,10 +14,12 @@ import com.pepsi.rh.entities.Absence;
 import com.pepsi.rh.entities.Blacklist;
 import com.pepsi.rh.entities.Collaborator;
 import com.pepsi.rh.entities.Departs;
+import com.pepsi.rh.entities.Discipline;
 import com.pepsi.rh.repo.IAbsence;
 import com.pepsi.rh.repo.IBlacklist;
 import com.pepsi.rh.repo.ICollaborateur;
 import com.pepsi.rh.repo.IDepart;
+import com.pepsi.rh.repo.IDiscipline;
 
 import lombok.NoArgsConstructor;
 
@@ -33,6 +35,8 @@ public class ServiceImpl implements IService{
 	IDepart deprepo;
 	@Autowired
 	IBlacklist blackrepo;
+	@Autowired
+	IDiscipline dsprepo;
 
 	public Absence addAbsence(Absence a, long idc) {
 		Collaborator c = crepo.findById(idc).get();
@@ -230,6 +234,61 @@ public Page<Blacklist> allBlacklist(int page, int size) {
 @Override
 public List<Blacklist> getAllBlacklist() {
 	return blackrepo.findAll();
+}
+
+
+
+//Discipline
+@Override
+public Discipline addDiscipline(Discipline D, long idc) {
+ 		
+	Collaborator c = crepo.findById(idc).get();
+	D.setCollaborateur(c);
+	D=dsprepo.save(D);
+	return D;
+}
+@Override
+public List<Discipline> findDisciplineCollaborateur(long id){
+	Collaborator c = crepo.findById(id).get();
+	return dsprepo.findByCollaborateur(c);
+}
+
+@Override
+public Discipline updateDiscipline(Discipline d, long id) {
+	
+	Discipline e =dsprepo.findById(id).get();
+	e.setId(id);
+	e.setAvertissement(d.getAvertissement());
+	e.setDate(d.getDate());
+	e.setFile(d.getFile());	
+	e.setCollaborateur(d.getCollaborateur());
+	return dsprepo.save(e);
+}
+
+@Override
+public void deleteDiscipline(long id) {
+	
+	dsprepo.deleteById(id);
+	
+}
+
+
+@Override
+public Discipline findDiscipline(Long id) {
+	Optional<Discipline> o = dsprepo.findById(id);
+	if(o.isPresent())
+	return o.get();
+	else
+		return null;
+}
+@Override
+public Page<Discipline> allDiscipline(int page, int size) {
+	Pageable pageable=PageRequest.of(page, size);
+	return dsprepo.findAll(pageable);
+}
+@Override
+public List<Discipline> getAllDiscipline() {
+	return dsprepo.findAll();
 }
 
 }

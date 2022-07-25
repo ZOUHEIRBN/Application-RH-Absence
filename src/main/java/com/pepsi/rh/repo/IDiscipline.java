@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface IDiscipline extends JpaRepository<Discipline, Integer>{
+public interface IDiscipline extends JpaRepository<Discipline, Long>{
   
 	public List<Discipline> findByCollaborateur(Collaborator collaborateur);
 	

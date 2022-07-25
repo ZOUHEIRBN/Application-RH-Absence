@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import com.pepsi.rh.entities.Departs;
+import com.pepsi.rh.entities.Discipline;
 import com.pepsi.rh.entities.Absence;
 import com.pepsi.rh.entities.Blacklist;
 import com.pepsi.rh.entities.Collaborator;
@@ -39,5 +40,14 @@ public interface IService {
 	public List<Blacklist> getAllBlacklist();
 	public void deleteBlacklist(long id);
 	public List<Blacklist> findBlacklistCollaborateur(long uid);
+
+
+	public Discipline addDiscipline(Discipline a, long idc);
+	public Discipline findDiscipline(Long id);
+	public Page<Discipline> allDiscipline(int page, int size);
+	public Discipline updateDiscipline(Discipline abs,long id );
+	public List<Discipline> getAllDiscipline();
+	public void deleteDiscipline(long id);
+	public List<Discipline> findDisciplineCollaborateur(long uid);
 
 }
