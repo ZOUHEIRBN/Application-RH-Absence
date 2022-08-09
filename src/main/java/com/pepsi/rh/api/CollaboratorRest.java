@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,15 +29,19 @@ public class CollaboratorRest {
 
 	@Autowired
 	IService service;
-	
+	@Autowired
+    private SimpMessagingTemplate template;
 	@PostMapping("/")
 	public ResponseEntity<Collaborator> save(@RequestBody Collaborator c)
 	{
 		c=service.addCollaborator(c);
-		if(c!=null)
-		return new ResponseEntity<>(c, HttpStatus.OK);
-		else
+		if(c!=null){
+			return new ResponseEntity<>(c, HttpStatus.OK);
+		}
+		
+		else{
 			return new ResponseEntity<Collaborator>(HttpStatus.NOT_ACCEPTABLE);
+		}
 	}
 	
 	@GetMapping("/page")
@@ -46,6 +51,11 @@ public class CollaboratorRest {
 	}
 	@GetMapping("/")
 	public List<Collaborator> allCollaborators() {
+		Notification notification = new Notification("Test notification", 
+		"Lorem ipsum dolor sit amet");
+
+        // Push notifications to front-end
+        template.convertAndSend("/pepsi_rh/notification", notification);
 		return service.getAllCollaborator();
 	}
 	@GetMapping("/{id}")
