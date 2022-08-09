@@ -7,6 +7,7 @@ package com.pepsi.rh.api;
 import java.util.List;
 
 import com.pepsi.rh.entities.Collaborator;
+import com.pepsi.rh.repo.ICollaborateur;
 import com.pepsi.rh.services.IService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,43 @@ public class CollaboratorRest {
 	@Autowired
 	IService service;
 	@Autowired
+	ICollaborateur crepo;
+	@Autowired
     private SimpMessagingTemplate template;
+
+	private boolean check_conflict(Collaborator c){
+		//Ex-employé
+		List<Collaborator> all_cin_inactive = crepo.findByCinAndActived(c.getCin(), false);
+			if(all_cin_inactive.size() > 0) {
+				// Push notifications to front-end		
+				Notification notification = new Notification("Ex-employee", 
+				"Ce CIN correspond à un ex-employé");
+				template.convertAndSend("/pepsi_rh/notification", notification);
+				return true;
+			}
+
+			//Employé existe actif
+			List<Collaborator> all_cin_active = crepo.findByCinAndActived(c.getCin(), true);
+			if(all_cin_active.size() > 0) {
+				// Push notifications to front-end		
+				Notification notification = new Notification("Duplicate employee", 
+				"Un employé avec le même CIN existe déja");
+				template.convertAndSend("/pepsi_rh/notification", notification);
+				return true;
+			}
+
+			return false;
+	}
+
 	@PostMapping("/")
 	public ResponseEntity<Collaborator> save(@RequestBody Collaborator c)
 	{
 		c=service.addCollaborator(c);
 		if(c!=null){
+			//Call check_conflict
+			if(check_conflict(c)){
+				return new ResponseEntity<Collaborator>(HttpStatus.CONFLICT);
+			}
 			return new ResponseEntity<>(c, HttpStatus.OK);
 		}
 		
@@ -51,11 +83,11 @@ public class CollaboratorRest {
 	}
 	@GetMapping("/")
 	public List<Collaborator> allCollaborators() {
+        // Push notifications to front-end		
 		Notification notification = new Notification("Test notification", 
 		"Lorem ipsum dolor sit amet");
-
-        // Push notifications to front-end
         template.convertAndSend("/pepsi_rh/notification", notification);
+
 		return service.getAllCollaborator();
 	}
 	@GetMapping("/{id}")
