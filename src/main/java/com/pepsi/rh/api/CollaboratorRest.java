@@ -38,25 +38,25 @@ public class CollaboratorRest {
 	private boolean check_conflict(Collaborator c){
 		//Ex-employé
 		List<Collaborator> all_cin_inactive = crepo.findByCinAndActived(c.getCin(), false);
-			if(all_cin_inactive.size() > 0) {
-				// Push notifications to front-end		
-				Notification notification = new Notification("Ex-employee", 
-				"Ce CIN correspond à un ex-employé");
-				template.convertAndSend("/pepsi_rh/notification", notification);
-				return true;
-			}
+		if(all_cin_inactive.size() > 0) {
+			// Push notifications to front-end		
+			Notification notification = new Notification("Ex-employee", 
+			"Ce CIN correspond à un ex-employé");
+			template.convertAndSend("/pepsi_rh/notification", notification);
+			return true;
+		}
 
-			//Employé existe actif
-			List<Collaborator> all_cin_active = crepo.findByCinAndActived(c.getCin(), true);
-			if(all_cin_active.size() > 0) {
-				// Push notifications to front-end		
-				Notification notification = new Notification("Duplicate employee", 
-				"Un employé avec le même CIN existe déja");
-				template.convertAndSend("/pepsi_rh/notification", notification);
-				return true;
-			}
+		//Employé existe actif
+		List<Collaborator> all_cin_active = crepo.findByCinAndActived(c.getCin(), true);
+		if(all_cin_active.size() > 0) {
+			// Push notifications to front-end		
+			Notification notification = new Notification("Duplicate employee", 
+			"Un employé avec le même CIN existe déja");
+			template.convertAndSend("/pepsi_rh/notification", notification);
+			return true;
+		}
 
-			return false;
+		return false;
 	}
 
 	@PostMapping("/")
